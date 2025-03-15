@@ -1,15 +1,34 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import io.github.charl11e.sat.*;
 
 public class Convertor {
     public static ArrayList<ArrayList<Integer>> convertToCNF (int[][] values) {
-        ArrayList<ArrayList<Integer>> clause_set = encodeRules();
-
+        ArrayList<ArrayList<Integer>> clause_set = new ArrayList<>();
+        encodeRules(clause_set);
+        encodeValues(clause_set, values);
         return clause_set;
     }
 
-    private static ArrayList<ArrayList<Integer>> encodeRules() {
+    public static int[][] decodeCNF(ArrayList<ArrayList<Integer>> clause_set) {
+        int[][] grid = new int[9][9];
+        for (ArrayList<Integer> clause : clause_set) {
+            for (int literal : clause) {
+                if (literal > 0) {
+                    int[] values = decodeLiteral(literal);
+                    int row = values[0];
+                    int col = values[1];
+                    int value = values[2];
+                    grid[row][col] = value;
+                }
+            }
+        }
+        return grid;
+    }
+
+    private static void encodeRules(ArrayList<ArrayList<Integer>> clause_set) {
         ArrayList<Integer> clause;
-        ArrayList<ArrayList<Integer>> clause_set = new ArrayList<>();
         // Each cell needs value from 1-9
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
@@ -34,6 +53,7 @@ public class Convertor {
                 }
             }
         }
+
 
         // Each row contains all numbers
         for (int row = 0; row < 9; row++) {
@@ -73,11 +93,42 @@ public class Convertor {
                 }
             }
         }
-        return clause_set;
     }
+
+    private static void encodeValues(ArrayList<ArrayList<Integer>> clause_set, int[][] values) {
+        ArrayList<Integer> clause;
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                int val = values[row][col];
+                if (val != 0) {
+                    clause = new ArrayList<>();
+                    clause.add(getLiteral(row, col, val));
+                    clause_set.add(clause);
+                }
+            }
+        }
+    }
+
 
     // Helper function to get value of each literal at each row, column and value
     private static int getLiteral(int row, int col, int val) {
-        return (row-1) * (9 * 9) + (col - 1) * 9 + val;
+        return row * 81 + col * 9 + val;
+    }
+
+    private static int[] decodeLiteral(int literal) {
+        int adjusted = literal - 1;
+        int row = adjusted / 81;
+        int remainder = adjusted % 81;
+        int col = remainder / 9;
+        int value = remainder % 9 + 1;
+        return new int[]{row, col, value};
+    }
+
+    public static void solve(int[][] values) {
+        ArrayList<ArrayList<Integer>> test = convertToCNF(values);
+        SATResult result = DPLL.solve(test);
+        System.out.println(result.getAssignment());
+        int[][] solved_result = decodeCNF(result.getClauseSet());
+        System.out.println(Arrays.deepToString(solved_result));
     }
 }

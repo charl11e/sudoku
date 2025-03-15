@@ -57,5 +57,6 @@ public class SudokuGUI {
                 }
             }
         }
+        Convertor.solve(values);
     }
 }
