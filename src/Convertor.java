@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 
+// https://users.aalto.fi/~tjunttil/2020-DP-AUT/notes-sat/solving.html
+// https://sat.inesc-id.pt/~ines/publications/aimath06.pdf
 import io.github.charl11e.sat.*;
 
 public class Convertor {
@@ -11,10 +14,9 @@ public class Convertor {
         return clause_set;
     }
 
-    public static int[][] decodeCNF(ArrayList<ArrayList<Integer>> clause_set) {
+    public static int[][] decodeCNF(Set<Integer> assignment) {
         int[][] grid = new int[9][9];
-        for (ArrayList<Integer> clause : clause_set) {
-            for (int literal : clause) {
+            for (int literal : assignment) {
                 if (literal > 0) {
                     int[] values = decodeLiteral(literal);
                     int row = values[0];
@@ -23,7 +25,6 @@ public class Convertor {
                     grid[row][col] = value;
                 }
             }
-        }
         return grid;
     }
 
@@ -128,7 +129,7 @@ public class Convertor {
         ArrayList<ArrayList<Integer>> test = convertToCNF(values);
         SATResult result = DPLL.solve(test);
         System.out.println(result.getAssignment());
-        int[][] solved_result = decodeCNF(result.getClauseSet());
+        int[][] solved_result = decodeCNF(result.getAssignment());
         System.out.println(Arrays.deepToString(solved_result));
     }
 }
