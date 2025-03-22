@@ -1,8 +1,9 @@
 import javax.swing.*;
+import javax.swing.border.*;
 import java.awt.*;
 
 public class SudokuGUI {
-    private static JTextField[][] inputFields = new JTextField[9][9];
+    private static final JTextField[][] inputFields = new JTextField[9][9];
 
     public static void main(String[] args) {
         JFrame jframe = new JFrame("Sudoku Solver");
@@ -17,6 +18,7 @@ public class SudokuGUI {
                 JTextField field = new JTextField();
                 field.setHorizontalAlignment(JTextField.CENTER);
                 field.setFont(new Font("Arial", Font.BOLD, 18));
+                field.setBorder(makeBold(row, col));
                 inputFields[row][col] = field;
                 inputs.add(field);
             }
@@ -32,6 +34,7 @@ public class SudokuGUI {
         buttons.add(solveButton);
 
         JButton clearButton = new JButton("Clear");
+        clearButton.addActionListener(e -> clearInput());
         buttons.add(clearButton);
 
         jframe.add(buttons, BorderLayout.SOUTH);
@@ -57,6 +60,54 @@ public class SudokuGUI {
                 }
             }
         }
-        Convertor.solve(values);
+        int[][] result = Convertor.solve(values);
+
+        // TODO what to do when unsat
+        if (false) {
+            JOptionPane.showMessageDialog(null, "No solution", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            fillResult(result);
+        }
+    }
+
+    private static void fillResult(int[][] result) {
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                inputFields[row][col].setText(String.valueOf(result[row][col]));
+            }
+        }
+    }
+
+    private static Border makeBold(int row, int col) {
+        int top = 0;
+        int left = 0;
+        int right = 0;
+
+        int bottom = 0;
+        if ( row == 2 || row == 5 || row == 8) {
+            bottom = 2;
+        }
+
+        if (row == 0) {
+            top = 2;
+        }
+
+        if (col == 0 || col == 3 || col == 6) {
+            left = 2;
+        }
+
+        if (col == 8) {
+            right = 2;
+        }
+
+        return BorderFactory.createMatteBorder(1 + top, 1 + left , 1 + bottom, 1 + right, Color.BLACK);
+    }
+
+    private static void clearInput() {
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                inputFields[row][col].setText("");
+            }
+        }
     }
 }

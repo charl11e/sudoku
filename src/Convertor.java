@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Set;
 
 // https://users.aalto.fi/~tjunttil/2020-DP-AUT/notes-sat/solving.html
@@ -125,11 +124,9 @@ public class Convertor {
         return new int[]{row, col, value};
     }
 
-    public static void solve(int[][] values) {
-        ArrayList<ArrayList<Integer>> test = convertToCNF(values);
-        SATResult result = DPLL.solve(test);
-        System.out.println(result.getAssignment());
-        int[][] solved_result = decodeCNF(result.getAssignment());
-        System.out.println(Arrays.deepToString(solved_result));
+    public static int[][] solve(int[][] values) {
+        ArrayList<ArrayList<Integer>> cnf = convertToCNF(values);
+        SATResult result = DPLL.solve(cnf);
+        return decodeCNF(result.getAssignment());
     }
 }
