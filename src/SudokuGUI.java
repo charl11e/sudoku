@@ -1,3 +1,5 @@
+import io.github.charl11e.sat.DPLL;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
@@ -63,7 +65,7 @@ public class SudokuGUI {
         int[][] result = Convertor.solve(values);
 
         // TODO what to do when unsat
-        if (false) {
+        if (result == Convertor.UNSAT_RESULT) {
             JOptionPane.showMessageDialog(null, "No solution", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             fillResult(result);

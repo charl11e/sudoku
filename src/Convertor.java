@@ -6,6 +6,11 @@ import java.util.Set;
 import io.github.charl11e.sat.*;
 
 public class Convertor {
+
+    // UNSAT Result if grid is unsolvable
+    public static final int[][] UNSAT_RESULT = new int[0][0];
+
+
     public static ArrayList<ArrayList<Integer>> convertToCNF (int[][] values) {
         ArrayList<ArrayList<Integer>> clause_set = new ArrayList<>();
         encodeRules(clause_set);
@@ -14,6 +19,11 @@ public class Convertor {
     }
 
     public static int[][] decodeCNF(Set<Integer> assignment) {
+        // Check that assignment is not empty, if it is return empty as UNSAT
+        if (assignment.isEmpty()) {
+            return UNSAT_RESULT;
+        }
+
         int[][] grid = new int[9][9];
             for (int literal : assignment) {
                 if (literal > 0) {

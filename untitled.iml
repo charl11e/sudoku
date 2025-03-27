@@ -8,6 +8,6 @@
     <orderEntry type="jdk" jdkName="21" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="groovy-4.0.14" level="project" />
-    <orderEntry type="library" name="SAT-1.0.0" level="project" />
+    <orderEntry type="library" name="SAT" level="project" />
   </component>
 </module>
